@@ -17,18 +17,18 @@ for(i=0;i<100;i++){
         height: 100,
         top: rectPosX,
         left: rectPosY,
-        fill: 'rgba(255,255,255,1)',
+        fill: '#fbfcf2',
         selectable: false
     });
     canvas.add(rect);
-
+    
     rectPosX += 100;
 }
 
 // Creation of line separators
 
 for(i=0;i<11;i++){
-    var lineX= new fabric.Line([0, 0, 1000, 0], {
+    var lineX = new fabric.Line([0, 0, 1000, 0], {
         left: 0,
         top: lineVerOffset,
         stroke: '#eee',
@@ -47,3 +47,19 @@ for(i=0;i<11;i++){
     canvas.add(lineX);
     canvas.add(lineY);
 }
+
+// Creation of events
+
+canvas.on('mouse:down', function(e) {
+    var clickedObject = e.target;
+
+    canvas.forEachObject(function(object) {
+        if(clickedObject == object) {
+            object.set('fill', '#276b68');
+            object.evented = false;
+        } else {
+            object.set('fill', '#fbfcf2');
+            object.evented = false;
+        }
+    });
+});
