@@ -7,7 +7,7 @@ var rectPosY = 0;
 
 // Creation of clickable fields 
 
-for(i=0;i<100;i++){
+for(let i=0;i<100;i++){
     if(i !== 0 && i%10 == 0) {
         rectPosX = 0;
         rectPosY += 100;
@@ -27,12 +27,13 @@ for(i=0;i<100;i++){
 
 // Creation of line separators
 
-for(i=0;i<11;i++){
+for(let i=0;i<11;i++){
     var lineX = new fabric.Line([0, 0, 1000, 0], {
         left: 0,
         top: lineVerOffset,
         stroke: '#eee',
-        selectable: false
+        selectable: false,
+        evented: false
     });
     lineVerOffset += (1000 - 1) / 10;
 
@@ -40,7 +41,8 @@ for(i=0;i<11;i++){
         left: lineHorOffset,
         top: 0,
         stroke: '#eee',
-        selectable: false
+        selectable: false,
+        evented: false
     });
     lineHorOffset += (1000 - 1) / 10;
 
@@ -53,13 +55,46 @@ for(i=0;i<11;i++){
 canvas.on('mouse:down', function(e) {
     var clickedObject = e.target;
 
-    canvas.forEachObject(function(object) {
-        if(clickedObject == object) {
-            object.set('fill', '#276b68');
-            object.evented = false;
-        } else {
-            object.set('fill', '#fbfcf2');
-            object.evented = false;
-        }
-    });
+    if(clickedObject !== null) {
+        var coord = [
+            {x: clickedObject.left, y: clickedObject.top - 300},
+            {x: clickedObject.left + 200, y: clickedObject.top - 200},
+            {x: clickedObject.left + 300, y: clickedObject.top},
+            {x: clickedObject.left + 200, y: clickedObject.top + 200},
+            {x: clickedObject.left, y: clickedObject.top + 300},
+            {x: clickedObject.left - 200, y: clickedObject.top + 200},
+            {x: clickedObject.left - 300, y: clickedObject.top},
+            {x: clickedObject.left - 200, y: clickedObject.top - 200},
+        ];
+    
+    
+        canvas.forEachObject(function(object) {
+            if(object.type == "rect") {
+                if(clickedObject == object) {
+                    object.set('fill', '#276b68');
+                    object.evented = false;
+                } else {
+                    var exists = false;
+
+                    for(let i=0; i<coord.length; i++) {
+                        if(object.left == coord[i].x && object.top == coord[i].y){
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if(exists) {
+                        if(!(object.get('fill') === '#276b68')) {
+                            object.set('fill', '#d0d765');
+                            object.evented = true;
+                        } 
+                    } else {
+                        if(!(object.get('fill') === '#276b68')) {
+                            object.set('fill', '#fbfcf2');
+                            object.evented = false;
+                        }
+                    }
+                }
+            }
+        });
+    }
 });
