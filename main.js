@@ -4,6 +4,8 @@ var lineHorOffset = 0;
 var lineVerOffset = 0;
 var rectPosX = 0;
 var rectPosY = 0;
+var objectsClickedCount = 0;
+var availableFields = 0;
 
 // Creation of clickable fields 
 
@@ -66,8 +68,9 @@ canvas.on('mouse:down', function(e) {
             {x: clickedObject.left - 300, y: clickedObject.top},
             {x: clickedObject.left - 200, y: clickedObject.top - 200},
         ];
-    
-    
+        objectsClickedCount++;
+        availableFields = 0;
+        
         canvas.forEachObject(function(object) {
             if(object.type == "rect") {
                 if(clickedObject == object) {
@@ -86,7 +89,8 @@ canvas.on('mouse:down', function(e) {
                         if(!(object.get('fill') === '#276b68')) {
                             object.set('fill', '#d0d765');
                             object.evented = true;
-                        } 
+                            availableFields++;
+                        }
                     } else {
                         if(!(object.get('fill') === '#276b68')) {
                             object.set('fill', '#fbfcf2');
@@ -96,5 +100,20 @@ canvas.on('mouse:down', function(e) {
                 }
             }
         });
+
+        if(availableFields == 0) {
+            if(objectsClickedCount == 100) {
+                var endgame = confirm("You Won! Do you want to play another game?");
+                if(endgame == true) {
+                    window.location.reload();
+                }
+            }
+            else {
+                var endgame = confirm("End Game! Do you want to play another game?");
+                if(endgame == true) {
+                    window.location.reload();
+                }
+            }
+        }
     }
 });
